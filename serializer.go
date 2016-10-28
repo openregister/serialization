@@ -1,11 +1,7 @@
 package main
 
 import (
-	"bytes"
-	"crypto/sha256"
 	"encoding/csv"
-	"encoding/hex"
-	"encoding/json"
 	"fmt"
 	"gopkg.in/yaml.v2"
 	"io"
@@ -17,85 +13,6 @@ import (
 	"strings"
 	"time"
 )
-
-// core register types
-
-type Datatype struct {
-	Datatype string `json:"datatype,omitempty"`
-	Phase    string `json:"phase,omitempty"`
-	Text     string `json:"text,omitempty"`
-}
-
-type Field struct {
-	Cardinality string `json:"cardinality,omitempty"`
-	Datatype    string `json:"datatype,omitempty"`
-	Field       string `json:"field,omitempty"`
-	Phase       string `json:"phase,omitempty"`
-	Register    string `json:"register,omitempty"`
-	Text        string `json:"text,omitempty"`
-}
-
-type Register struct {
-	Copyright string   `json:"copyright,omitempty"`
-	Fields    []string `json:"fields,omitempty"`
-	Phase     string   `json:"phase,omitempty"`
-	Register  string   `json:"register,omitempty"`
-	Registry  string   `json:"registry,omitempty"`
-	Text      string   `json:"text,omitempty"`
-}
-
-type Registry struct {
-	Registry string `json:"registry,omitempty"`
-}
-
-// utilities
-
-func sha256Hex(b []byte) string {
-	hasher := sha256.New()
-	hasher.Write(b)
-	return hex.EncodeToString(hasher.Sum(nil))
-}
-
-func timestamp() string {
-	return time.Now().UTC().Format(time.RFC3339)
-}
-
-func readFieldTypes(rc io.Reader) map[string]Field {
-	var fields map[string]Field
-	json.Unmarshal(streamToBytes(rc), &fields)
-	return fields
-}
-
-func streamToBytes(stream io.Reader) []byte {
-	buf := new(bytes.Buffer)
-	buf.ReadFrom(stream)
-	return buf.Bytes()
-}
-
-func escapeQuotes(s string) string {
-	return strings.Replace(s, `"`, `\"`, -1)
-}
-
-func toJsonArrayOfStr(s string) string {
-	return `["` + strings.Replace(s, `;`, `","`, -1) + `"]`
-}
-
-func toJsonArrayOfNum(s string) string {
-	return `[` + strings.Replace(s, `;`, `,`, -1) + `]`
-}
-
-func readRegisterYaml(yamlFile io.Reader) Register {
-	var reg Register
-	yaml.Unmarshal(streamToBytes(yamlFile), &reg)
-	return reg
-}
-
-func toJsonStr(r interface{}) (string, error) {
-	data, err := json.Marshal(r)
-	return string(data), err
-}
-
-// helpers
 
 func buildContentJson(fieldNames []string, fieldValues []string, sortedIndexes []int, fields map[string]Field) string {
 	jsonParts := []string{}
@@ -119,18 +36,6 @@ func buildContentJson(fieldNames []string, fieldValues []string, sortedIndexes [
 	jsonBody := strings.Join(jsonParts, ",")
 	return "{" + jsonBody + "}"
 }
-
-// need to implement sort.Interface for FieldIndex
-type FieldIndex struct {
-	Field string
-	Index int
-}
-
-type ByAlphabetical []FieldIndex
-
-func (a ByAlphabetical) Len() int           { return len(a) }
-func (a ByAlphabetical) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
-func (a ByAlphabetical) Less(i, j int) bool { return a[i].Field < a[j].Field }
 
 func alphabeticalIndexes(fields []string) []int {
 	fieldIndexes := make([]FieldIndex, len(fields))
@@ -192,8 +97,9 @@ func processYamlFile(fileInfo os.FileInfo, yamlDir string, registerName string) 
 			log.Fatal(err)
 			return
 		}
+		defer yamlFile.Close()
+
 		processYaml(yamlFile, registerName)
-		yamlFile.Close()
 	}
 }
 
@@ -251,6 +157,7 @@ func main() {
 		log.Fatal(fieldsErr)
 		return
 	}
+	defer fieldsFile.Close()
 
 	switch os.Args[1] {
 
@@ -261,9 +168,8 @@ func main() {
 			log.Fatal(err)
 			return
 		}
+		defer tsvFile.Close()
 		processCSV(fieldsFile, tsvFile)
-
-		tsvFile.Close()
 
 	case "yaml":
 		yamlDir := os.Args[3]
@@ -282,6 +188,5 @@ func main() {
 		log.Fatal("file type was not 'yaml' or 'tsv'")
 	}
 
-	fieldsFile.Close()
 	log.Println(time.Now())
 }

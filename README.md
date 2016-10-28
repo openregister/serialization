@@ -18,11 +18,15 @@ One extra package is required for YAML parsing.
 
 >cd $GOPATH/src
 
-TODO check into github
+>mkdir github.com/TODO
 
->git clone git@bitbucket.org:john_ollier/register-serializer.git
+>git clone git@github.com:openregister/serialization.git
 
->go install register.gov.uk/register-serializer
+>go install TODO
+
+Alternatively
+
+>go get https://github.com/openregister/serialization
 
 ### Usage
 
