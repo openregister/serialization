@@ -145,7 +145,7 @@ func processYaml(yamlFile io.Reader, registerName string) {
 
 func main() {
 	if len(os.Args) < 3 {
-		log.Fatal("Usage: tsv|yaml reg_tsv_serializer [fields json file] [data file/directory]")
+		log.Fatal("Usage: tsv|yaml serializer [fields json file] [data file/directory]")
 		return
 	}
 
