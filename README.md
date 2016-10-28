@@ -1,6 +1,6 @@
-# serialization
+## Serializer
 
-This project contains a script which will convert a TSV file in the format supplied by the RDA into a Serialized Register.
+This project contains a script which will convert a TSV file in the format supplied by the RDA into a Serialized Register. Output is sent to STDOUT.
 
 - Timestamps are added with the time the SR is created.
 - Item JSON is canonicalized.
@@ -14,30 +14,36 @@ Assuming you checkout the project into a Go workspace i.e. $GOPATH is defined an
 
 One extra package is required for YAML parsing.
 
->go get gopkg.in/yaml.v2
+    >go get gopkg.in/yaml.v2
+    >cd $GOPATH/src
 
->cd $GOPATH/src
+If this directory does not exist, create it:
 
->mkdir github.com/TODO
+    >mkdir github.com/openregister/
+    >git clone git@github.com:openregister/serializer.git
+    >go install github.com/openregister/serializer
 
->git clone git@github.com:openregister/serialization.git
+Will build the script and put an executable file for your architecture in $GOPATH/bin
 
->go install TODO
+Alternatively, from any directory, but note this will clone the repo over https :
 
-Alternatively
+    >go get github.com/openregister/serializer
 
->go get https://github.com/openregister/serialization
+### Tests
+
+Tests are in **.../openregister/serializer_test.go**. To run
+
+    >cd [path to ]/openregister/serializer/
+    >go test
 
 ### Usage
 
-Pass the argument 'tsv' or 'yaml'
+Pass the argument **tsv** or **yaml**
 
-Pass the path to fields JSON and TSV files/ YAML directory to be loaded as arguments.
+Pass the path to the **fields** JSON; and the TSV files/ YAML directory to be loaded as arguments.
 
 e.g.
 
->cd openregister
-
->register-serializer tsv field-records.json address/address.tsv
-
->register-serializer yaml field-records.json registry-data/data/beta/register
+    >cd openregister (where register data is located)
+    >serializer tsv field-records.json address/address.tsv
+    >serializer yaml field-records.json registry-data/data/beta/register
