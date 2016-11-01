@@ -5,7 +5,6 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
-	"gopkg.in/yaml.v2"
 	"io"
 	"strings"
 	"time"
@@ -45,12 +44,6 @@ func toJsonArrayOfStr(s string) string {
 
 func toJsonArrayOfNum(s string) string {
 	return `[` + strings.Replace(s, `;`, `,`, -1) + `]`
-}
-
-func readRegisterYaml(yamlFile io.Reader) Register {
-	var reg Register
-	yaml.Unmarshal(streamToBytes(yamlFile), &reg)
-	return reg
 }
 
 func toJsonStr(r interface{}) (string, error) {
