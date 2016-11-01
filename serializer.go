@@ -73,7 +73,7 @@ func processCSV(fieldsFile, tsvFile io.Reader) {
 	//read header
 	fieldNames, err := csvReader.Read()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Error reading first line of tsv file: " + err.Error())
 		return
 	}
 	sortedIndexes := alphabeticalIndexes(fieldNames)
@@ -83,7 +83,7 @@ func processCSV(fieldsFile, tsvFile io.Reader) {
 			if err == io.EOF {
 				break
 			}
-			log.Fatal(err)
+			log.Fatal("Error reading csv line: " + err.Error())
 			return
 		}
 		processLine(fieldValues, fieldNames, sortedIndexes, fields)
@@ -94,7 +94,7 @@ func processYamlFile(fileInfo os.FileInfo, yamlDir string, registerName string) 
 	if strings.HasSuffix(fileInfo.Name(), ".yaml") {
 		yamlFile, err := os.Open(yamlDir + "/" + fileInfo.Name())
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal("Error reading yaml file: " + err.Error())
 			return
 		}
 		defer yamlFile.Close()
@@ -125,11 +125,11 @@ func processYaml(yamlFile io.Reader, registerName string) {
 		yaml.Unmarshal(streamToBytes(yamlFile), &r)
 		contentJson, err = toJsonStr(r)
 	default:
-		log.Fatal("register name not recognised")
+		log.Fatal("Error: register name not recognised " + registerName)
 		return
 	}
 	if err != nil {
-		log.Fatal("failed to marshal to json for " + string(streamToBytes(yamlFile)))
+		log.Fatal("Error: failed to marshal to json for " + string(streamToBytes(yamlFile)))
 		return
 	}
 
@@ -145,7 +145,7 @@ func processYaml(yamlFile io.Reader, registerName string) {
 
 func main() {
 	if len(os.Args) < 3 {
-		log.Fatal("Usage: tsv|yaml serializer [fields json file] [data file/directory]")
+		log.Fatal("Usage: serializer tsv|yaml [fields json file] [data file/directory]")
 		return
 	}
 
@@ -154,7 +154,7 @@ func main() {
 	fieldsFileName := os.Args[2]
 	fieldsFile, fieldsErr := os.Open(fieldsFileName)
 	if fieldsErr != nil {
-		log.Fatal(fieldsErr)
+		log.Fatal("Error reading fields json file: " + fieldsErr.Error())
 		return
 	}
 	defer fieldsFile.Close()
@@ -165,7 +165,7 @@ func main() {
 		tsvFileName := os.Args[3]
 		tsvFile, err := os.Open(tsvFileName)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal("Error reading tsv file: " + err.Error())
 			return
 		}
 		defer tsvFile.Close()
@@ -176,7 +176,7 @@ func main() {
 		registerName := filepath.Base(yamlDir)
 		files, err := ioutil.ReadDir(yamlDir)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal("Error reading yaml directory: " + err.Error())
 			return
 		}
 
@@ -185,7 +185,7 @@ func main() {
 		}
 
 	default:
-		log.Fatal("file type was not 'yaml' or 'tsv'")
+		log.Fatal("Error: file type was not 'yaml' or 'tsv'")
 	}
 
 	log.Println(time.Now())
