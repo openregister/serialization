@@ -5,7 +5,7 @@ This project contains a script which will convert a TSV file or YAML files in a 
 - timestamps are added with the time the SR is created.
 - item JSON is canonicalized.
 - fields JSON is used to format fields with Cardinality 'n'
-- quotes all allowed in the body of a field and will be escaped in JSON
+- quotes are allowed in the body of a field and will be escaped in JSON
 - if the first or last character of a field is a quote then the whole field should be surrounded by quotes e.g ""Go" Cafe"
 
 ### Building
@@ -26,6 +26,7 @@ One extra package is required for YAML parsing.
     If this directory does not exist, create it:
 
     >mkdir -p github.com/openregister/
+    >cd github.com/openregister
     >git clone git@github.com:openregister/serializer.git
     >go install github.com/openregister/serializer
 
