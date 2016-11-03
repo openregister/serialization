@@ -152,3 +152,27 @@ func TestMarshalRegister(t *testing.T) {
 		t.Error(`should write json without empty fields`)
 	}
 }
+
+func TestCheckFieldNames(t *testing.T) {
+	fieldNames := []string{"c", "b", "a"}
+	fields := map[string]Field{
+		"a": Field{"1", "string", "", "", "", ""},
+		"b": Field{"1", "string", "", "", "", ""},
+		"c": Field{"n", "string", "", "", "", ""},
+	}
+	if !mapContainsAllKeys(fields, fieldNames) {
+		t.Error("should confirm field names a,b,c all valid")
+	}
+}
+
+func TestCheckFieldNamesMissing(t *testing.T) {
+	fieldNames := []string{"d", "b", "a"}
+	fields := map[string]Field{
+		"a": Field{"1", "string", "", "", "", ""},
+		"b": Field{"1", "string", "", "", "", ""},
+		"c": Field{"n", "string", "", "", "", ""},
+	}
+	if mapContainsAllKeys(fields, fieldNames) {
+		t.Error("should find not all field names valid")
+	}
+}

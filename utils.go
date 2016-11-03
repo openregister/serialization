@@ -50,3 +50,12 @@ func toJsonStr(r interface{}) (string, error) {
 	data, err := json.Marshal(r)
 	return string(data), err
 }
+
+func mapContainsAllKeys(fields map[string]Field, fieldNames []string) bool {
+	for _, fieldName := range fieldNames {
+		if _, ok := fields[fieldName]; !ok {
+			return false
+		}
+	}
+	return true
+}

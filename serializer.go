@@ -65,7 +65,7 @@ func processLine(fieldValues []string, fieldNames []string, sortedIndexes []int,
 
 func processCSV(fieldsFile, tsvFile io.Reader) {
 
-	fields := readFieldTypes(fieldsFile)
+	var fields map[string]Field = readFieldTypes(fieldsFile)
 
 	csvReader := csv.NewReader(tsvFile)
 	csvReader.Comma = '\t'
@@ -74,6 +74,10 @@ func processCSV(fieldsFile, tsvFile io.Reader) {
 	fieldNames, err := csvReader.Read()
 	if err != nil {
 		log.Fatal("Error reading first line of tsv file: " + err.Error())
+		return
+	}
+	if !mapContainsAllKeys(fields, fieldNames) {
+		log.Fatal("Error fields in tsv did not match fields json: " + fmt.Sprint(fieldNames))
 		return
 	}
 	sortedIndexes := alphabeticalIndexes(fieldNames)
