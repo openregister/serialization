@@ -54,18 +54,18 @@ func alphabeticalIndexes(fields []string) []int {
 
 func processLine(fieldValues []string, fieldNames []string, sortedIndexes []int, fieldDefns map[string]Field) {
 	contentJson := buildContentJson(fieldNames, fieldValues, sortedIndexes, fieldDefns)
-	contentJsonHash := "sha256:" + sha256Hex([]byte(contentJson))
-	itemParts := []string{"append-entry", timestamp(), contentJsonHash}
-	itemLine := strings.Join(itemParts, "\t")
-	entryParts := []string{"add-item", string(contentJson)}
+	contentJsonHash := "sha-256:" + sha256Hex([]byte(contentJson))
+	entryParts := []string{"append-entry", timestamp(), contentJsonHash}
 	entryLine := strings.Join(entryParts, "\t")
+	itemParts := []string{"add-item", string(contentJson)}
+	itemLine := strings.Join(itemParts, "\t")
 	fmt.Println(itemLine)
 	fmt.Println(entryLine)
 }
 
 func processCSV(fieldsFile, tsvFile io.Reader) {
 
-	fields := readFieldTypes(fieldsFile)
+	var fields map[string]Field = readFieldTypes(fieldsFile)
 
 	csvReader := csv.NewReader(tsvFile)
 	csvReader.Comma = '\t'
@@ -74,6 +74,10 @@ func processCSV(fieldsFile, tsvFile io.Reader) {
 	fieldNames, err := csvReader.Read()
 	if err != nil {
 		log.Fatal("Error reading first line of tsv file: " + err.Error())
+		return
+	}
+	if !mapContainsAllKeys(fields, fieldNames) {
+		log.Fatal("Error fields in tsv did not match fields json: " + fmt.Sprint(fieldNames))
 		return
 	}
 	sortedIndexes := alphabeticalIndexes(fieldNames)
@@ -133,14 +137,13 @@ func processYaml(yamlFile io.Reader, registerName string) {
 		return
 	}
 
-	contentJsonHash := "sha256:" + sha256Hex([]byte(contentJson))
-	itemParts := []string{"append-entry", timestamp(), contentJsonHash}
-	itemLine := strings.Join(itemParts, "\t")
-	entryParts := []string{"add-item", string(contentJson)}
+	contentJsonHash := "sha-256:" + sha256Hex([]byte(contentJson))
+	entryParts := []string{"append-entry", timestamp(), contentJsonHash}
 	entryLine := strings.Join(entryParts, "\t")
+	itemParts := []string{"add-item", string(contentJson)}
+	itemLine := strings.Join(itemParts, "\t")
 	fmt.Println(itemLine)
 	fmt.Println(entryLine)
-
 }
 
 func main() {
