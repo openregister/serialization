@@ -38,6 +38,23 @@ func TestBuildJson(t *testing.T) {
 	}
 }
 
+func TestBuildJsonIgnoreWhitespace(t *testing.T) {
+	fieldNames := []string{"c", "b", "a"}
+	fieldValues := []string{"d", "  ", "1"}
+	sortedIndexes := []int{2, 1, 0}
+	fields := map[string]Field{
+		"a": Field{"1", "string", "", "", "", ""},
+		"b": Field{"1", "string", "", "", "", ""},
+		"c": Field{"n", "string", "", "", "", ""},
+	}
+	json := buildContentJson(fieldNames, fieldValues, sortedIndexes, fields)
+	fmt.Println(json)
+	expected := `{"a":"1","c":["d"]}`
+	if expected != json {
+		t.Error("should build " + expected)
+	}
+}
+
 func TestHash(t *testing.T) {
 	jsonStr := "{\"key\":\"value\"}"
 	jsonBytes := []byte(jsonStr)
@@ -104,14 +121,21 @@ func TestReadCommasLeading(t *testing.T) {
 }
 
 func TestEscape(t *testing.T) {
-	escaped := escapeQuotes(`aaa "bbb" ccc`)
+	escaped := escapeForJson(`aaa "bbb" ccc`)
 	if escaped != `aaa \"bbb\" ccc` {
 		t.Error("should escape quotes")
 	}
 }
 
+func TestEscapeBackSlash(t *testing.T) {
+	escaped := escapeForJson(`aaa/ccc\aaa`)
+	if escaped != `aaa/ccc\\aaa` {
+		t.Error("should escape slash")
+	}
+}
+
 func TestEscapeNoQuotes(t *testing.T) {
-	escaped := escapeQuotes(`aaa bbb ccc`)
+	escaped := escapeForJson(`aaa bbb ccc`)
 	if escaped != `aaa bbb ccc` {
 		t.Error("should do nothing if no quotes")
 	}

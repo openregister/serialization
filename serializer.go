@@ -17,10 +17,10 @@ import (
 func buildContentJson(fieldNames []string, fieldValues []string, sortedIndexes []int, fields map[string]Field) string {
 	jsonParts := []string{}
 	for _, index := range sortedIndexes {
-		if len(fieldValues[index]) > 0 {
+		if len(strings.TrimSpace(fieldValues[index])) > 0 {
 			jsonPart := ""
 			fieldDef := fields[fieldNames[index]]
-			escapedValue := escapeQuotes(fieldValues[index])
+			escapedValue := escapeForJson(fieldValues[index])
 			if fieldDef.Cardinality == "n" {
 				if fieldDef.Datatype == "string" {
 					jsonPart = fmt.Sprintf(`"%s":%s`, fieldNames[index], toJsonArrayOfStr(escapedValue))

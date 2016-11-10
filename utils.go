@@ -34,8 +34,10 @@ func streamToBytes(stream io.Reader) []byte {
 	return buf.Bytes()
 }
 
-func escapeQuotes(s string) string {
-	return strings.Replace(s, `"`, `\"`, -1)
+func escapeForJson(s string) string {
+	tmp := strings.Replace(s, `\`, `\\`, -1)
+	tmp = strings.Replace(tmp, `"`, `\"`, -1)
+	return tmp
 }
 
 func toJsonArrayOfStr(s string) string {
