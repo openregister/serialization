@@ -71,7 +71,6 @@ func processLine(fieldValues []string, fieldNames []string, sortedIndexes []int,
 	if err != nil {
 		log.Fatal("Error: getting key" + err.Error())
 		return
-
 	}
 	contentJson := buildContentJson(fieldNames, fieldValues, sortedIndexes, fieldDefns)
 	contentJsonHash := "sha-256:" + sha256Hex([]byte(contentJson))

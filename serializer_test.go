@@ -204,7 +204,6 @@ func TestKeyNotFound(t *testing.T) {
 	fieldNames := []string{"school", "foo"}
 	fieldValues := []string{"schoolId", "bar"}
 	_, err := getKey(fieldNames, fieldValues, "schoolz")
-	fmt.Println(err.Error())
 	if err.Error() != "failed to find field matching register name" {
 		t.Error("should report key not found")
 	}
