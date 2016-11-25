@@ -60,7 +60,6 @@ func getKey(fieldNames []string, fieldValues []string, registerName string) (str
 				return key, nil
 			} else {
 				return "", errors.New("failed to find field matching register name")
-
 			}
 		}
 	}
