@@ -2,13 +2,13 @@ package main
 
 import (
 	"encoding/csv"
+	"errors"
 	"fmt"
 	"gopkg.in/yaml.v2"
 	"io"
 	"io/ioutil"
 	"log"
 	"os"
-	"path/filepath"
 	"sort"
 	"strings"
 	"time"
@@ -52,10 +52,31 @@ func alphabeticalIndexes(fields []string) []int {
 	return sortedIndexes
 }
 
-func processLine(fieldValues []string, fieldNames []string, sortedIndexes []int, fieldDefns map[string]Field) {
+func getKey(fieldNames []string, fieldValues []string, registerName string) (string, error) {
+	for i, fieldName := range fieldNames {
+		if fieldName == registerName {
+			key := fieldValues[i]
+			if len(key) > 0 {
+				return key, nil
+			} else {
+				return "", errors.New("failed to find field matching register name")
+
+			}
+		}
+	}
+	return "", errors.New("failed to find field matching register name")
+}
+
+func processLine(fieldValues []string, fieldNames []string, sortedIndexes []int, fieldDefns map[string]Field, registerName string) {
+	key, err := getKey(fieldNames, fieldValues, registerName)
+	if err != nil {
+		log.Fatal("Error: getting key" + err.Error())
+		return
+
+	}
 	contentJson := buildContentJson(fieldNames, fieldValues, sortedIndexes, fieldDefns)
 	contentJsonHash := "sha-256:" + sha256Hex([]byte(contentJson))
-	entryParts := []string{"append-entry", timestamp(), contentJsonHash}
+	entryParts := []string{"append-entry", timestamp(), contentJsonHash, key}
 	entryLine := strings.Join(entryParts, "\t")
 	itemParts := []string{"add-item", string(contentJson)}
 	itemLine := strings.Join(itemParts, "\t")
@@ -63,7 +84,7 @@ func processLine(fieldValues []string, fieldNames []string, sortedIndexes []int,
 	fmt.Println(entryLine)
 }
 
-func processCSV(fieldsFile, tsvFile io.Reader) {
+func processCSV(fieldsFile, tsvFile io.Reader, registerName string) {
 
 	var fields map[string]Field = readFieldTypes(fieldsFile)
 
@@ -73,11 +94,15 @@ func processCSV(fieldsFile, tsvFile io.Reader) {
 	//read header
 	fieldNames, err := csvReader.Read()
 	if err != nil {
-		log.Fatal("Error reading first line of tsv file: " + err.Error())
+		log.Fatal("Error: reading first line of tsv file: " + err.Error())
 		return
 	}
 	if !mapContainsAllKeys(fields, fieldNames) {
-		log.Fatal("Error fields in tsv did not match fields json: " + fmt.Sprint(fieldNames))
+		log.Fatal("Error: fields in tsv did not match fields json: " + fmt.Sprint(fieldNames))
+		return
+	}
+	if !stringArrayContains(fieldNames, registerName) {
+		log.Fatal("Error: field headings do not include register name " + fmt.Sprint(fieldNames))
 		return
 	}
 	sortedIndexes := alphabeticalIndexes(fieldNames)
@@ -90,7 +115,7 @@ func processCSV(fieldsFile, tsvFile io.Reader) {
 			log.Fatal("Error reading csv line: " + err.Error())
 			return
 		}
-		processLine(fieldValues, fieldNames, sortedIndexes, fields)
+		processLine(fieldValues, fieldNames, sortedIndexes, fields, registerName)
 	}
 }
 
@@ -147,17 +172,18 @@ func processYaml(yamlFile io.Reader, registerName string) {
 }
 
 func main() {
-	if len(os.Args) < 3 {
-		log.Fatal("Usage: serializer tsv|yaml [fields json file] [data file/directory]")
+	if len(os.Args) < 4 {
+		log.Fatal("Usage: serializer tsv|yaml [fields json file] [data file/directory] [register name]")
 		return
 	}
 
 	log.Println(time.Now())
 
+	registerName := os.Args[4]
 	fieldsFileName := os.Args[2]
 	fieldsFile, fieldsErr := os.Open(fieldsFileName)
 	if fieldsErr != nil {
-		log.Fatal("Error reading fields json file: " + fieldsErr.Error())
+		log.Fatal("Error: reading fields json file: " + fieldsErr.Error())
 		return
 	}
 	defer fieldsFile.Close()
@@ -168,18 +194,17 @@ func main() {
 		tsvFileName := os.Args[3]
 		tsvFile, err := os.Open(tsvFileName)
 		if err != nil {
-			log.Fatal("Error reading tsv file: " + err.Error())
+			log.Fatal("Error: reading tsv file: " + err.Error())
 			return
 		}
 		defer tsvFile.Close()
-		processCSV(fieldsFile, tsvFile)
+		processCSV(fieldsFile, tsvFile, registerName)
 
 	case "yaml":
 		yamlDir := os.Args[3]
-		registerName := filepath.Base(yamlDir)
 		files, err := ioutil.ReadDir(yamlDir)
 		if err != nil {
-			log.Fatal("Error reading yaml directory: " + err.Error())
+			log.Fatal("Error: reading yaml directory: " + err.Error())
 			return
 		}
 

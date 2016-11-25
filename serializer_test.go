@@ -31,7 +31,6 @@ func TestBuildJson(t *testing.T) {
 		"c": Field{"n", "string", "", "", "", ""},
 	}
 	json := buildContentJson(fieldNames, fieldValues, sortedIndexes, fields)
-	//	fmt.Println(json)
 	expected := `{"a":"1","b":"e \"f\" g","c":["d","h"]}`
 	if expected != json {
 		t.Error("should build " + expected)
@@ -48,7 +47,6 @@ func TestBuildJsonIgnoreWhitespace(t *testing.T) {
 		"c": Field{"n", "string", "", "", "", ""},
 	}
 	json := buildContentJson(fieldNames, fieldValues, sortedIndexes, fields)
-	fmt.Println(json)
 	expected := `{"a":"1","c":["d"]}`
 	if expected != json {
 		t.Error("should build " + expected)
@@ -75,7 +73,6 @@ func TestReadFields(t *testing.T) {
 
 func TestTimestamp(t *testing.T) {
 	ts := timestamp()
-	//fmt.Println(ts)
 	if !strings.HasSuffix(ts, "Z") {
 		t.Error("timestamp should be end with Z")
 	}
@@ -89,7 +86,6 @@ func TestReadCommas(t *testing.T) {
 
 	records, _ := r.Read()
 	name := records[0]
-	//fmt.Println(name)
 	if name != "aa" {
 		t.Error("surrounding quotes should not be read")
 	}
@@ -102,7 +98,6 @@ func TestReadCommasInternal(t *testing.T) {
 
 	records, _ := r.Read()
 	name := records[0]
-	//fmt.Println(name)
 	if name != `a "bb" a` {
 		t.Error("internal quotes shoul be read")
 	}
@@ -114,7 +109,6 @@ func TestReadCommasLeading(t *testing.T) {
 
 	records, _ := r.Read()
 	name := records[0]
-	//fmt.Println(name)
 	if name != `"aa"cc` {
 		t.Error("leading quotes should not be read if whole string quoted")
 	}
@@ -143,7 +137,6 @@ func TestEscapeNoQuotes(t *testing.T) {
 
 func TestJsonStringArray(t *testing.T) {
 	json := toJsonArrayOfStr(`aa;bb;cc`)
-	//fmt.Println(json)
 	if json != `["aa","bb","cc"]` {
 		t.Error(`should render aa;bb;cc as ["aaa","bbb","ccc"]`)
 	}
@@ -153,8 +146,6 @@ func TestReadYaml(t *testing.T) {
 	yamlFile, _ := os.Open("test-data/country.yaml")
 	var register Register
 	yaml.Unmarshal(streamToBytes(yamlFile), &register)
-
-	//fmt.Println(register)
 
 	if register.Phase != "beta" {
 		t.Error(`should read phase of country as beta`)
@@ -170,7 +161,6 @@ func TestReadYaml(t *testing.T) {
 func TestMarshalRegister(t *testing.T) {
 	reg := Register{"", []string{"address"}, "alpha", "address", "office-for", "Postal address"}
 	json, _ := toJsonStr(reg)
-	//fmt.Println(json)
 	expected := `{"fields":["address"],"phase":"alpha","register":"address","registry":"office-for","text":"Postal address"}`
 	if expected != json {
 		t.Error(`should write json without empty fields`)
@@ -198,5 +188,24 @@ func TestCheckFieldNamesMissing(t *testing.T) {
 	}
 	if mapContainsAllKeys(fields, fieldNames) {
 		t.Error("should find not all field names valid")
+	}
+}
+
+func TestGetKey(t *testing.T) {
+	fieldNames := []string{"school", "foo"}
+	fieldValues := []string{"schoolId", "bar"}
+	key, _ := getKey(fieldNames, fieldValues, "school")
+	if key != "schoolId" {
+		t.Error("should find schoolId as value of register name field")
+	}
+}
+
+func TestKeyNotFound(t *testing.T) {
+	fieldNames := []string{"school", "foo"}
+	fieldValues := []string{"schoolId", "bar"}
+	_, err := getKey(fieldNames, fieldValues, "schoolz")
+	fmt.Println(err.Error())
+	if err.Error() != "failed to find field matching register name" {
+		t.Error("should report key not found")
 	}
 }

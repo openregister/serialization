@@ -61,3 +61,12 @@ func mapContainsAllKeys(fields map[string]Field, fieldNames []string) bool {
 	}
 	return true
 }
+
+func stringArrayContains(arr []string, e string) bool {
+    for _, s := range arr {
+        if s == e {
+            return true
+        }
+    }
+    return false
+}
