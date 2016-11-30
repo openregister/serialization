@@ -45,16 +45,19 @@ Tests are in **.../openregister/serializer_test.go**. To run
 
 ### Usage
 
-Pass the argument **tsv** or **yaml**
-
-Pass the paths to the **fields** JSON; and the TSV files/ YAML directory to be loaded as arguments.
-
 You need to have a copy of the fields JSON in a file e.g.
 
     >curl http://field.discovery.openregister.org/records.json > field-records.json
 
+#### arguments
+
+- **tsv** or **yaml**
+- path to the **fields** JSON
+- path to the TSV files/ YAML directory containing the data
+- register name
+
 Then e.g.
 
     >cd openregister (where register data is located)
-    >serializer tsv field-records.json address/address.tsv
-    >serializer yaml field-records.json registry-data/data/beta/register
+    >serializer tsv field-records.json address/address.tsv address
+    >serializer yaml field-records.json registry-data/data/beta/register register
