@@ -12,6 +12,7 @@ import (
 	"sort"
 	"strings"
 	"time"
+	"reflect"
 )
 
 func buildContentJson(fieldNames []string, fieldValues []string, sortedIndexes []int, fields map[string]Field) string {
@@ -133,24 +134,29 @@ func processYamlFile(fileInfo os.FileInfo, yamlDir string, registerName string) 
 func processYaml(yamlFile io.Reader, registerName string) {
 	var contentJson string
 	var err error
+	var key reflect.Value
 
 	switch registerName {
 	case "datatype":
-		var dt Datatype
-		yaml.Unmarshal(streamToBytes(yamlFile), &dt)
-		contentJson, err = toJsonStr(dt)
+		var r Datatype
+		yaml.Unmarshal(streamToBytes(yamlFile), &r)
+		contentJson, err = toJsonStr(r)
+		key = reflect.ValueOf(&r).Elem().FieldByName("Datatype")
 	case "field":
-		var f Field
-		yaml.Unmarshal(streamToBytes(yamlFile), &f)
-		contentJson, err = toJsonStr(f)
+		var r Field
+		yaml.Unmarshal(streamToBytes(yamlFile), &r)
+		contentJson, err = toJsonStr(r)
+		key = reflect.ValueOf(&r).Elem().FieldByName("Field")
 	case "register":
-		var reg Register
-		yaml.Unmarshal(streamToBytes(yamlFile), &reg)
-		contentJson, err = toJsonStr(reg)
+		var r Register
+		yaml.Unmarshal(streamToBytes(yamlFile), &r)
+		contentJson, err = toJsonStr(r)
+		key = reflect.ValueOf(&r).Elem().FieldByName("Register")
 	case "registry":
 		var r Registry
 		yaml.Unmarshal(streamToBytes(yamlFile), &r)
 		contentJson, err = toJsonStr(r)
+		key = reflect.ValueOf(&r).Elem().FieldByName("Registry")
 	default:
 		log.Fatal("Error: register name not recognised " + registerName)
 		return
@@ -161,7 +167,7 @@ func processYaml(yamlFile io.Reader, registerName string) {
 	}
 
 	contentJsonHash := "sha-256:" + sha256Hex([]byte(contentJson))
-	entryParts := []string{"append-entry", timestamp(), contentJsonHash}
+	entryParts := []string{"append-entry", timestamp(), contentJsonHash, key.String()}
 	entryLine := strings.Join(entryParts, "\t")
 	itemParts := []string{"add-item", string(contentJson)}
 	itemLine := strings.Join(itemParts, "\t")
