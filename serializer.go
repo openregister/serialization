@@ -70,7 +70,7 @@ func getKey(fieldNames []string, fieldValues []string, registerName string) (str
 func getKeyFromStruct(v reflect.Value, registerName string) (string) {
 	key := v.Elem().FieldByName(strings.Title(registerName)).String()
 	if key == "" {
-		log.Fatal("Error: getting key" + errors.New("failed to find field matching register name").Error())
+		log.Fatal("Error: getting key failed to find field matching register name")
 	}
 	
 	return key
@@ -79,7 +79,7 @@ func getKeyFromStruct(v reflect.Value, registerName string) (string) {
 func processLine(fieldValues []string, fieldNames []string, sortedIndexes []int, fieldDefns map[string]Field, registerName string) {
 	key, err := getKey(fieldNames, fieldValues, registerName)
 	if err != nil {
-		log.Fatal("Error: getting key" + err.Error())
+		log.Fatal("Error: getting key " + err.Error())
 		return
 	}
 	contentJson := buildContentJson(fieldNames, fieldValues, sortedIndexes, fieldDefns)
