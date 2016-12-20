@@ -12,7 +12,6 @@ import (
 	"sort"
 	"strings"
 	"time"
-	"reflect"
 )
 
 func buildContentJson(fieldNames []string, fieldValues []string, sortedIndexes []int, fields map[string]Field) string {
@@ -65,15 +64,6 @@ func getKey(fieldNames []string, fieldValues []string, registerName string) (str
 		}
 	}
 	return "", errors.New("failed to find field matching register name")
-}
-
-func getKeyFromStruct(v reflect.Value, registerName string) (string) {
-	key := v.Elem().FieldByName(strings.Title(registerName)).String()
-	if key == "" {
-		log.Fatal("Error: getting key failed to find field matching register name")
-	}
-	
-	return key
 }
 
 func processLine(fieldValues []string, fieldNames []string, sortedIndexes []int, fieldDefns map[string]Field, registerName string) {
@@ -149,22 +139,22 @@ func processYaml(yamlFile io.Reader, registerName string) {
 		var r Datatype
 		yaml.Unmarshal(streamToBytes(yamlFile), &r)
 		contentJson, err = toJsonStr(r)
-		key = getKeyFromStruct(reflect.ValueOf(&r), registerName)
+		key = r.Datatype
 	case "field":
 		var r Field
 		yaml.Unmarshal(streamToBytes(yamlFile), &r)
 		contentJson, err = toJsonStr(r)
-		key = getKeyFromStruct(reflect.ValueOf(&r), registerName)
+		key = r.Field
 	case "register":
 		var r Register
 		yaml.Unmarshal(streamToBytes(yamlFile), &r)
 		contentJson, err = toJsonStr(r)
-		key = getKeyFromStruct(reflect.ValueOf(&r), registerName)
+		key = r.Register
 	case "registry":
 		var r Registry
 		yaml.Unmarshal(streamToBytes(yamlFile), &r)
 		contentJson, err = toJsonStr(r)
-		key = getKeyFromStruct(reflect.ValueOf(&r), registerName)
+		key = r.Registry
 	default:
 		log.Fatal("Error: register name not recognised " + registerName)
 		return
