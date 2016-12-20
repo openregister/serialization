@@ -69,7 +69,7 @@ func getKey(fieldNames []string, fieldValues []string, registerName string) (str
 func processLine(fieldValues []string, fieldNames []string, sortedIndexes []int, fieldDefns map[string]Field, registerName string) {
 	key, err := getKey(fieldNames, fieldValues, registerName)
 	if err != nil {
-		log.Fatal("Error: getting key" + err.Error())
+		log.Fatal("Error: getting key " + err.Error())
 		return
 	}
 	contentJson := buildContentJson(fieldNames, fieldValues, sortedIndexes, fieldDefns)
@@ -83,7 +83,6 @@ func processLine(fieldValues []string, fieldNames []string, sortedIndexes []int,
 }
 
 func processCSV(fieldsFile, tsvFile io.Reader, registerName string) {
-
 	var fields map[string]Field = readFieldTypes(fieldsFile)
 
 	csvReader := csv.NewReader(tsvFile)
@@ -133,24 +132,29 @@ func processYamlFile(fileInfo os.FileInfo, yamlDir string, registerName string) 
 func processYaml(yamlFile io.Reader, registerName string) {
 	var contentJson string
 	var err error
+	var key string
 
 	switch registerName {
 	case "datatype":
-		var dt Datatype
-		yaml.Unmarshal(streamToBytes(yamlFile), &dt)
-		contentJson, err = toJsonStr(dt)
+		var r Datatype
+		yaml.Unmarshal(streamToBytes(yamlFile), &r)
+		contentJson, err = toJsonStr(r)
+		key = r.Datatype
 	case "field":
-		var f Field
-		yaml.Unmarshal(streamToBytes(yamlFile), &f)
-		contentJson, err = toJsonStr(f)
+		var r Field
+		yaml.Unmarshal(streamToBytes(yamlFile), &r)
+		contentJson, err = toJsonStr(r)
+		key = r.Field
 	case "register":
-		var reg Register
-		yaml.Unmarshal(streamToBytes(yamlFile), &reg)
-		contentJson, err = toJsonStr(reg)
+		var r Register
+		yaml.Unmarshal(streamToBytes(yamlFile), &r)
+		contentJson, err = toJsonStr(r)
+		key = r.Register
 	case "registry":
 		var r Registry
 		yaml.Unmarshal(streamToBytes(yamlFile), &r)
 		contentJson, err = toJsonStr(r)
+		key = r.Registry
 	default:
 		log.Fatal("Error: register name not recognised " + registerName)
 		return
@@ -161,7 +165,7 @@ func processYaml(yamlFile io.Reader, registerName string) {
 	}
 
 	contentJsonHash := "sha-256:" + sha256Hex([]byte(contentJson))
-	entryParts := []string{"append-entry", timestamp(), contentJsonHash}
+	entryParts := []string{"append-entry", timestamp(), contentJsonHash, key}
 	entryLine := strings.Join(entryParts, "\t")
 	itemParts := []string{"add-item", string(contentJson)}
 	itemLine := strings.Join(itemParts, "\t")
