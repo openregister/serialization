@@ -55,9 +55,12 @@ You need to have a copy of the fields JSON in a file e.g.
 - path to the **fields** JSON
 - path to the TSV files/ YAML directory containing the data
 - register name
+- **-excludeRootHash** - optional flag to disable adding assert root hash for empty register to the beginning of the file
 
 Then e.g.
 
     >cd openregister (where register data is located)
     >serializer tsv field-records.json address/address.tsv address
     >serializer yaml field-records.json registry-data/data/beta/register register
+    >serializer tsv field-records.json address/address.tsv address -excludeRootHash
+    >serializer yaml field-records.json registry-data/data/beta/register register -excludeRootHash
