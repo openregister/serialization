@@ -66,6 +66,10 @@ func getKey(fieldNames []string, fieldValues []string, registerName string) (str
 	return "", errors.New("failed to find field matching register name")
 }
 
+func processEmptyRootHash() {
+	fmt.Println("assert-root-hash\te3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")
+}
+
 func processLine(fieldValues []string, fieldNames []string, sortedIndexes []int, fieldDefns map[string]Field, registerName string) {
 	key, err := getKey(fieldNames, fieldValues, registerName)
 	if err != nil {
@@ -82,7 +86,7 @@ func processLine(fieldValues []string, fieldNames []string, sortedIndexes []int,
 	fmt.Println(entryLine)
 }
 
-func processCSV(fieldsFile, tsvFile io.Reader, registerName string) {
+func processCSV(fieldsFile, tsvFile io.Reader, registerName string, includeRootHash bool) {
 	var fields map[string]Field = readFieldTypes(fieldsFile)
 
 	csvReader := csv.NewReader(tsvFile)
@@ -102,6 +106,11 @@ func processCSV(fieldsFile, tsvFile io.Reader, registerName string) {
 		log.Fatal("Error: field headings do not include register name " + fmt.Sprint(fieldNames))
 		return
 	}
+
+	if includeRootHash {
+		processEmptyRootHash()
+	}
+
 	sortedIndexes := alphabeticalIndexes(fieldNames)
 	for {
 		fieldValues, err := csvReader.Read()
@@ -175,11 +184,16 @@ func processYaml(yamlFile io.Reader, registerName string) {
 
 func main() {
 	if len(os.Args) < 4 {
-		log.Fatal("Usage: serializer tsv|yaml [fields json file] [data file/directory] [register name]")
+		log.Fatal("Usage: serializer tsv|yaml <fields json file> <data file/directory> <register name> [-excludeRootHash]")
 		return
 	}
 
 	log.Println(time.Now())
+
+	includeRootHash := true
+	if len(os.Args) > 5 {
+		includeRootHash = os.Args[5] != "-excludeRootHash"
+	}
 
 	registerName := os.Args[4]
 	fieldsFileName := os.Args[2]
@@ -200,7 +214,7 @@ func main() {
 			return
 		}
 		defer tsvFile.Close()
-		processCSV(fieldsFile, tsvFile, registerName)
+		processCSV(fieldsFile, tsvFile, registerName, includeRootHash)
 
 	case "yaml":
 		yamlDir := os.Args[3]
@@ -210,6 +224,9 @@ func main() {
 			return
 		}
 
+		if includeRootHash {
+			processEmptyRootHash()
+		}
 		for _, file := range files {
 			processYamlFile(file, yamlDir, registerName)
 		}
