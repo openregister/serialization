@@ -49,8 +49,12 @@ func toJsonArrayOfNum(s string) string {
 }
 
 func toJsonStr(r interface{}) (string, error) {
-	data, err := json.Marshal(r)
-	return string(data), err
+	var buf bytes.Buffer
+	enc := json.NewEncoder(&buf)
+	enc.SetEscapeHTML(false)
+	err := enc.Encode(r)
+
+	return strings.TrimSpace(buf.String()), err
 }
 
 func mapContainsAllKeys(fields map[string]Field, fieldNames []string) bool {
@@ -63,10 +67,10 @@ func mapContainsAllKeys(fields map[string]Field, fieldNames []string) bool {
 }
 
 func stringArrayContains(arr []string, e string) bool {
-    for _, s := range arr {
-        if s == e {
-            return true
-        }
-    }
-    return false
+	for _, s := range arr {
+		if s == e {
+			return true
+		}
+	}
+	return false
 }

@@ -26,9 +26,9 @@ func TestBuildJson(t *testing.T) {
 	fieldValues := []string{"d;h", `e "f" g`, "1"}
 	sortedIndexes := []int{2, 1, 0}
 	fields := map[string]Field{
-		"a": Field{"1", "string", "", "", "", ""},
-		"b": Field{"1", "string", "", "", "", ""},
-		"c": Field{"n", "string", "", "", "", ""},
+		"a": {"1", "string", "", "", "", ""},
+		"b": {"1", "string", "", "", "", ""},
+		"c": {"n", "string", "", "", "", ""},
 	}
 	json := buildContentJson(fieldNames, fieldValues, sortedIndexes, fields)
 	expected := `{"a":"1","b":"e \"f\" g","c":["d","h"]}`
@@ -42,9 +42,9 @@ func TestBuildJsonIgnoreWhitespace(t *testing.T) {
 	fieldValues := []string{"d", "  ", "1"}
 	sortedIndexes := []int{2, 1, 0}
 	fields := map[string]Field{
-		"a": Field{"1", "string", "", "", "", ""},
-		"b": Field{"1", "string", "", "", "", ""},
-		"c": Field{"n", "string", "", "", "", ""},
+		"a": {"1", "string", "", "", "", ""},
+		"b": {"1", "string", "", "", "", ""},
+		"c": {"n", "string", "", "", "", ""},
 	}
 	json := buildContentJson(fieldNames, fieldValues, sortedIndexes, fields)
 	expected := `{"a":"1","c":["d"]}`
@@ -167,12 +167,21 @@ func TestMarshalRegister(t *testing.T) {
 	}
 }
 
+func TestEscapedMarshalRegister(t *testing.T) {
+	 reg := Register{"", []string{"address"}, "alpha", "address", "office-for", "Post & address no > no < than that"}
+	 json, _ := toJsonStr(reg)
+	 expected := `{"fields":["address"],"phase":"alpha","register":"address","registry":"office-for","text":"Post & address no > no < than that"}`
+	 if expected != json {
+	 	t.Error(`should write json without escaping &, <, >`)
+	 }
+}
+
 func TestCheckFieldNames(t *testing.T) {
 	fieldNames := []string{"c", "b", "a"}
 	fields := map[string]Field{
-		"a": Field{"1", "string", "", "", "", ""},
-		"b": Field{"1", "string", "", "", "", ""},
-		"c": Field{"n", "string", "", "", "", ""},
+		"a": {"1", "string", "", "", "", ""},
+		"b": {"1", "string", "", "", "", ""},
+		"c": {"n", "string", "", "", "", ""},
 	}
 	if !mapContainsAllKeys(fields, fieldNames) {
 		t.Error("should confirm field names a,b,c all valid")
@@ -182,9 +191,9 @@ func TestCheckFieldNames(t *testing.T) {
 func TestCheckFieldNamesMissing(t *testing.T) {
 	fieldNames := []string{"d", "b", "a"}
 	fields := map[string]Field{
-		"a": Field{"1", "string", "", "", "", ""},
-		"b": Field{"1", "string", "", "", "", ""},
-		"c": Field{"n", "string", "", "", "", ""},
+		"a": {"1", "string", "", "", "", ""},
+		"b": {"1", "string", "", "", "", ""},
+		"c": {"n", "string", "", "", "", ""},
 	}
 	if mapContainsAllKeys(fields, fieldNames) {
 		t.Error("should find not all field names valid")
