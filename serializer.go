@@ -67,7 +67,7 @@ func getKey(fieldNames []string, fieldValues []string, registerName string) (str
 }
 
 func processEmptyRootHash() {
-	fmt.Println("assert-root-hash\te3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")
+	fmt.Println("assert-root-hash\tsha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")
 }
 
 func processLine(fieldValues []string, fieldNames []string, sortedIndexes []int, fieldDefns map[string]Field, registerName string) {
