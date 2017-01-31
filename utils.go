@@ -53,8 +53,7 @@ func toJsonStr(r interface{}) (string, error) {
 	enc := json.NewEncoder(&buf)
 	enc.SetEscapeHTML(false)
 	err := enc.Encode(r)
-
-	return strings.TrimSpace(buf.String()), err
+	return strings.TrimSuffix(buf.String(), "\n"), err
 }
 
 func mapContainsAllKeys(fields map[string]Field, fieldNames []string) bool {
