@@ -23,8 +23,14 @@ func timestamp() string {
 }
 
 func readFieldTypes(rc io.Reader) map[string]Field {
-	var fields map[string]Field
-	json.Unmarshal(streamToBytes(rc), &fields)
+	var entries map[string]FieldEntry
+	json.Unmarshal(streamToBytes(rc), &entries)
+
+	var fields = map[string]Field{}
+	for fieldName, entry := range entries {
+		fields[fieldName] = entry.Items[0]
+	}
+
 	return fields
 }
 
