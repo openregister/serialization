@@ -87,7 +87,12 @@ func processLine(fieldValues []string, fieldNames []string, sortedIndexes []int,
 }
 
 func processCSV(fieldsFile, tsvFile io.Reader, registerName string, includeRootHash bool) {
-	var fields map[string]Field = readFieldTypes(fieldsFile)
+	var fields = map[string]Field{}
+	fields, err := readFieldTypes(fieldsFile)
+	if err != nil {
+		log.Fatal("Error: extracting fields: "+ err.Error())
+		return
+	}
 
 	csvReader := csv.NewReader(tsvFile)
 	csvReader.Comma = '\t'

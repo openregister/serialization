@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"io"
 	"strings"
 	"time"
@@ -22,16 +23,20 @@ func timestamp() string {
 	return time.Now().UTC().Format(time.RFC3339)
 }
 
-func readFieldTypes(rc io.Reader) map[string]Field {
+func readFieldTypes(rc io.Reader) (map[string]Field,error) {
 	var entries map[string]FieldEntry
 	json.Unmarshal(streamToBytes(rc), &entries)
 
 	var fields = map[string]Field{}
 	for fieldName, entry := range entries {
-		fields[fieldName] = entry.Items[0]
+		if (len(entry.Items) == 1) {
+			fields[fieldName] = entry.Items[0]
+		} else {
+			return nil, errors.New("field "+ fieldName +" must have one item defined")
+		}
 	}
 
-	return fields
+	return fields, nil
 }
 
 func streamToBytes(stream io.Reader) []byte {
