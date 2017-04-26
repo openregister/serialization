@@ -64,7 +64,8 @@ func TestHash(t *testing.T) {
 
 func TestReadFields(t *testing.T) {
 	fieldsFile, _ := os.Open("test-data/field-records.json")
-	fields := readFieldTypes(fieldsFile)
+	fields, _ := readFieldTypes(fieldsFile)
+
 	//	fmt.Println(fields["street"].Datatype)
 	if fields["street"].Datatype != "string" {
 		t.Error("street field should have datatype of string")

@@ -6,6 +6,10 @@ type Datatype struct {
 	Text     string `json:"text,omitempty"`
 }
 
+type FieldEntry struct {
+	Items	[]Field `json:"item,omitempty"`
+}
+
 type Field struct {
 	Cardinality string `json:"cardinality,omitempty"`
 	Datatype    string `json:"datatype,omitempty"`

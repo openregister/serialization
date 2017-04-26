@@ -2,203 +2,221 @@
   "parent-address": {
     "entry-number": "20",
     "entry-timestamp": "2016-08-23T09:49:25Z",
-    "item-hash": "sha-256:30646573a1ee84e5ad39b4aaf0d31794228ad07117acb1c1584f36312ac94052",
-    "text": "An address containing an address",
-    "field": "parent-address",
-    "phase": "discovery",
-    "datatype": "string",
-    "register": "address",
-    "cardinality": "1"
+    "item": [{
+        "text": "An address containing an address",
+        "field": "parent-address",
+        "phase": "discovery",
+        "datatype": "string",
+        "register": "address",
+        "cardinality": "1"
+    }]
   },
   "primary-address": {
     "entry-number": "18",
     "entry-timestamp": "2016-08-23T09:49:25Z",
-    "item-hash": "sha-256:14f5c17c570c355f748db69ea6087193a6875598e4f0c645720a9b88394ec52f",
-    "text": "An address which is the primary address for an address",
-    "field": "primary-address",
-    "phase": "discovery",
-    "datatype": "string",
-    "register": "address",
-    "cardinality": "1"
+    "item": [{
+        "text": "An address which is the primary address for an address",
+        "field": "primary-address",
+        "phase": "discovery",
+        "datatype": "string",
+        "register": "address",
+        "cardinality": "1"
+    }]
   },
   "name": {
     "entry-number": "34",
     "entry-timestamp": "2016-08-23T09:49:25Z",
-    "item-hash": "sha-256:64517509c4f60328c6b2ca95bdfede60d194e0907830c5bf7731c237e567a3c1",
-    "text": "English name for an entry",
-    "field": "name",
-    "phase": "beta",
-    "datatype": "string",
-    "cardinality": "1"
+    "item": [{
+        "text": "English name for an entry",
+        "field": "name",
+        "phase": "beta",
+        "datatype": "string",
+        "cardinality": "1"
+    }]
   },
   "start-date": {
     "entry-number": "24",
     "entry-timestamp": "2016-08-23T09:49:25Z",
-    "item-hash": "sha-256:c84729159a23467e0775128392f97893e79487e54ee9f565e74eb819c6abf0f7",
-    "text": "Start datetime for the applicability of a register entry.",
-    "field": "start-date",
-    "phase": "beta",
-    "datatype": "datetime",
-    "cardinality": "1"
+    "item": [{
+        "text": "Start datetime for the applicability of a register entry.",
+        "field": "start-date",
+        "phase": "beta",
+        "datatype": "datetime",
+        "cardinality": "1"
+    }]
   },
   "school-phase": {
     "entry-number": "7",
     "entry-timestamp": "2016-08-23T09:49:25Z",
-    "item-hash": "sha-256:d2d74d2899b4c9c98e44772f6ebe6c78635ca3c999d2bce7de0be2b774bb8053",
-    "text": "Phase of a school.",
-    "field": "school-phase",
-    "phase": "discovery",
-    "datatype": "string",
-    "register": "school-phase",
-    "cardinality": "1"
+    "item": [{
+        "text": "Phase of a school.",
+        "field": "school-phase",
+        "phase": "discovery",
+        "datatype": "string",
+        "register": "school-phase",
+        "cardinality": "1"
+    }]
   },
   "point": {
     "entry-number": "4",
     "entry-timestamp": "2016-08-23T09:49:25Z",
-    "item-hash": "sha-256:652319a12d0178c7829d0ac6570dd1cdf0b3d34ac6c4d26974d9b24b6efd545f",
-    "text": "A geographical location",
-    "field": "point",
-    "phase": "discovery",
-    "datatype": "point",
-    "cardinality": "1"
+    "item": [{
+        "text": "A geographical location",
+        "field": "point",
+        "phase": "discovery",
+        "datatype": "point",
+        "cardinality": "1"
+    }]
   },
   "food-premises-type": {
     "entry-number": "42",
     "entry-timestamp": "2016-08-23T09:49:25Z",
-    "item-hash": "sha-256:1e487624f3f1edaa4acba5ba3b98ee77530b1bf3c9aae6e7716cb344dc2e8e11",
-    "text": "The type of food premises.",
-    "field": "food-premises-type",
-    "phase": "discovery",
-    "datatype": "string",
-    "register": "food-premises-type",
-    "cardinality": "1"
+    "item": [{
+        "text": "The type of food premises.",
+        "field": "food-premises-type",
+        "phase": "discovery",
+        "datatype": "string",
+        "register": "food-premises-type",
+        "cardinality": "1"
+    }]
   },
   "datatype": {
     "entry-number": "41",
     "entry-timestamp": "2016-08-23T09:49:25Z",
-    "item-hash": "sha-256:ff1c1957df65b31a2b2e24be3ac1e2bf81d0d97ee327a3a9477b76c9921a4ec9",
-    "text": "The data type for constraining a field value.",
-    "field": "datatype",
-    "phase": "alpha",
-    "datatype": "string",
-    "register": "datatype",
-    "cardinality": "1"
+    "item": [{
+        "text": "The data type for constraining a field value.",
+        "field": "datatype",
+        "phase": "alpha",
+        "datatype": "string",
+        "register": "datatype",
+        "cardinality": "1"
+    }]
   },
   "local-authority-wls": {
     "entry-number": "11",
     "entry-timestamp": "2016-08-23T09:49:25Z",
-    "item-hash": "sha-256:809cc984004191086281640f3ca3132ae271c64a2221ef87f6dc9942ff5bd37c",
-    "text": "A local authority in Wales.",
-    "field": "local-authority-wls",
-    "phase": "discovery",
-    "datatype": "string",
-    "register": "local-authority-wls",
-    "cardinality": "1"
+    "item": [{
+        "text": "A local authority in Wales.",
+        "field": "local-authority-wls",
+        "phase": "discovery",
+        "datatype": "string",
+        "register": "local-authority-wls",
+        "cardinality": "1"
+    }]
   },
   "street": {
     "entry-number": "43",
     "entry-timestamp": "2016-08-23T09:49:25Z",
-    "item-hash": "sha-256:a2a84402be5ed90edd9cbde09a27b8f6726439960ae0e041f3e9009baca60a4b",
-    "text": "A street in the UK",
-    "field": "street",
-    "phase": "discovery",
-    "datatype": "string",
-    "register": "street",
-    "cardinality": "1"
+    "item": [{
+        "text": "A street in the UK",
+        "field": "street",
+        "phase": "discovery",
+        "datatype": "string",
+        "register": "street",
+        "cardinality": "1"
+    }]
   },
   "name-cy": {
     "entry-number": "66",
     "entry-timestamp": "2016-08-23T09:49:25Z",
-    "item-hash": "sha-256:f8da81fdfe8c84867e0c5e4ca103db090d79f9e5ba48384858ebcc946ec7bf7d",
-    "text": "Welsh name for an entry",
-    "field": "name-cy",
-    "phase": "discovery",
-    "datatype": "string",
-    "cardinality": "1"
+    "item": [{
+        "text": "Welsh name for an entry",
+        "field": "name-cy",
+        "phase": "discovery",
+        "datatype": "string",
+        "cardinality": "1"
+    }]
   },
   "place": {
     "entry-number": "22",
     "entry-timestamp": "2016-08-23T09:49:25Z",
-    "item-hash": "sha-256:96a9255ba682f829a051bde555fdb8fa07db4df269f32ed5642bfb1526d09944",
-    "text": "A named place in the UK",
-    "field": "place",
-    "phase": "discovery",
-    "datatype": "string",
-    "register": "place",
-    "cardinality": "1"
+    "item": [{
+        "text": "A named place in the UK",
+        "field": "place",
+        "phase": "discovery",
+        "datatype": "string",
+        "register": "place",
+        "cardinality": "1"
+    }]
   },
   "food-premises-rating-structural-score": {
     "entry-number": "64",
     "entry-timestamp": "2016-08-23T09:49:25Z",
-    "item-hash": "sha-256:69284464caffd6d3b03e3595dcaebc235fe3ce3b73e3698432681bec2db6fcb7",
-    "text": "Level of compliance with structural requirements including cleanliness, layout, condition of structure, lighting, ventilation, facilities etc. Lower scores are better.",
-    "field": "food-premises-rating-structural-score",
-    "phase": "discovery",
-    "datatype": "integer",
-    "cardinality": "1"
+    "item": [{
+        "text": "Level of compliance with structural requirements including cleanliness, layout, condition of structure, lighting, ventilation, facilities etc. Lower scores are better.",
+        "field": "food-premises-rating-structural-score",
+        "phase": "discovery",
+        "datatype": "integer",
+        "cardinality": "1"
+    }]
   },
   "email": {
     "entry-number": "10",
     "entry-timestamp": "2016-08-23T09:49:25Z",
-    "item-hash": "sha-256:1f02eabf9eb6dd849535e053d872234894c499e0b5ff6557e7c1376a32c47611",
-    "text": "An email address for contact.",
-    "field": "email",
-    "phase": "alpha",
-    "datatype": "string",
-    "cardinality": "1"
+    "item": [{
+        "text": "An email address for contact.",
+        "field": "email",
+        "phase": "alpha",
+        "datatype": "string",
+        "cardinality": "1"
+    }]
   },
   "address": {
     "entry-number": "65",
     "entry-timestamp": "2016-08-23T09:49:25Z",
-    "item-hash": "sha-256:9e67526c11d1e4fe911d3684ca069b64d1ec6946bd3e865ca9aa98076217567c",
-    "text": "An address in the UK",
-    "field": "address",
-    "phase": "discovery",
-    "datatype": "string",
-    "register": "address",
-    "cardinality": "1"
+    "item": [{
+        "text": "An address in the UK",
+        "field": "address",
+        "phase": "discovery",
+        "datatype": "string",
+        "register": "address",
+        "cardinality": "1"
+    }]
   },
   "cardinality": {
     "entry-number": "39",
     "entry-timestamp": "2016-08-23T09:49:25Z",
-    "item-hash": "sha-256:1a8548f0f31c13b470a386242d6dc45604640a85ae8f2e05d486b97e19c97e34",
-    "text": "Number of elements of the set (1 or n).",
-    "field": "cardinality",
-    "phase": "beta",
-    "datatype": "string",
-    "cardinality": "1"
+    "item": [{
+        "text": "Number of elements of the set (1 or n).",
+        "field": "cardinality",
+        "phase": "beta",
+        "datatype": "string",
+        "cardinality": "1"
+    }]
   },
   "local-authority": {
     "entry-number": "29",
     "entry-timestamp": "2016-08-23T09:49:25Z",
-    "item-hash": "sha-256:ddd2cc4d73593661ec4f3727db3b2962dde1246c3a8fce77e9a0a532c4202d8c",
-    "text": "A local government organisation in the United Kingdom.",
-    "field": "local-authority",
-    "phase": "discovery",
-    "datatype": "string",
-    "register": "local-authority",
-    "cardinality": "1"
+    "item": [{
+        "text": "A local government organisation in the United Kingdom.",
+        "field": "local-authority",
+        "phase": "discovery",
+        "datatype": "string",
+        "register": "local-authority",
+        "cardinality": "1"
+    }]
   },
   "end-date": {
     "entry-number": "40",
     "entry-timestamp": "2016-08-23T09:49:25Z",
-    "item-hash": "sha-256:165847f92aa8a11e178100216766b007ac400b57405e27707ab93974002637db",
-    "text": "End datetime for the applicability of a register entry.",
-    "field": "end-date",
-    "phase": "beta",
-    "datatype": "datetime",
-    "cardinality": "1"
+    "item": [{
+        "text": "End datetime for the applicability of a register entry.",
+        "field": "end-date",
+        "phase": "beta",
+        "datatype": "datetime",
+        "cardinality": "1"
+    }]
   },
   "dioceses": {
     "entry-number": "60",
     "entry-timestamp": "2016-08-23T09:49:25Z",
-    "item-hash": "sha-256:a702d35b263770e0045115d4201b43dc9d3a1c97828fdcc1126cc331f9db4f7e",
-    "text": "A list of districts under the pastoral care of a bishop in the Christian Church.",
-    "field": "dioceses",
-    "phase": "discovery",
-    "datatype": "string",
-    "register": "diocese",
-    "cardinality": "n"
+    "item": [{
+        "text": "A list of districts under the pastoral care of a bishop in the Christian Church.",
+        "field": "dioceses",
+        "phase": "discovery",
+        "datatype": "string",
+        "register": "diocese",
+        "cardinality": "n"
+    }]
   }
-
 }
