@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"gopkg.in/yaml.v2"
 	"os"
+	"regexp"
 	"strings"
 	"testing"
 )
@@ -19,6 +20,37 @@ func TestAlphabeticalSort(t *testing.T) {
 			t.Error(`sorted indexes for b,c,a should be 2,0,1`)
 		}
 	}
+}
+
+func TestProcessLine(t *testing.T) {
+	fieldNames := []string{"a","b"}
+	fieldValues := []string{"a1","b1"}
+	sortedIndexes := []int{0,1}
+	fields := map[string]Field{
+		"a": {"1", "string", "", "", "", ""},
+		"b": {"1", "string", "", "", "", ""},
+	}
+	registerName := "a"
+	_, entryLine, _ := processLine(fieldValues, fieldNames, sortedIndexes, fields, registerName) 
+	matched, _ := regexp.MatchString("append-entry\ta1\t.+\tsha-256:.+", entryLine)
+	if  !matched {
+		t.Error("entry line should be append-entry[tab]a1[tab]date[tab]sha-256:...")
+	}
+}
+
+func TestProcessYaml(t *testing.T) {
+	yamlFile, err := os.Open("test-data/country.yaml")
+	if err != nil {
+		fmt.Println("Error reading yaml file: " + err.Error())
+		return
+	}
+	defer yamlFile.Close()
+	_, entryLine, _ := processYaml(yamlFile, "register")
+	fmt.Println(entryLine)
+	matched, _ := regexp.MatchString("append-entry\tcountry\t.+\tsha-256:.+", entryLine)
+	if  !matched {
+		t.Error("entry line should be append-entry[tab]country[tab]date[tab]sha-256:...")
+	} 
 }
 
 func TestBuildJson(t *testing.T) {

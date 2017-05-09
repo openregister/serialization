@@ -70,20 +70,19 @@ func processEmptyRootHash() {
 	fmt.Println("assert-root-hash\tsha-256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")
 }
 
-func processLine(fieldValues []string, fieldNames []string, sortedIndexes []int, fieldDefns map[string]Field, registerName string) {
+func processLine(fieldValues []string, fieldNames []string, sortedIndexes []int, fieldDefns map[string]Field, registerName string) (string, string, error) {
 	key, err := getKey(fieldNames, fieldValues, registerName)
 	if err != nil {
 		log.Fatal("Error: getting key " + err.Error())
-		return
+		return "","", err
 	}
 	contentJson := buildContentJson(fieldNames, fieldValues, sortedIndexes, fieldDefns)
 	contentJsonHash := "sha-256:" + sha256Hex([]byte(contentJson))
-	entryParts := []string{"append-entry", timestamp(), contentJsonHash, key}
+	entryParts := []string{"append-entry", key, timestamp(), contentJsonHash}
 	entryLine := strings.Join(entryParts, "\t")
 	itemParts := []string{"add-item", string(contentJson)}
 	itemLine := strings.Join(itemParts, "\t")
-	fmt.Println(itemLine)
-	fmt.Println(entryLine)
+	return itemLine, entryLine, nil
 }
 
 func processCSV(fieldsFile, tsvFile io.Reader, registerName string, includeRootHash bool) {
@@ -126,7 +125,12 @@ func processCSV(fieldsFile, tsvFile io.Reader, registerName string, includeRootH
 			log.Fatal("Error reading csv line: " + err.Error())
 			return
 		}
-		processLine(fieldValues, fieldNames, sortedIndexes, fields, registerName)
+		itemLine, entryLine, err := processLine(fieldValues, fieldNames, sortedIndexes, fields, registerName)
+		if err != nil {
+			return
+		}
+		fmt.Println(itemLine)
+		fmt.Println(entryLine)
 	}
 }
 
@@ -139,11 +143,17 @@ func processYamlFile(fileInfo os.FileInfo, yamlDir string, registerName string) 
 		}
 		defer yamlFile.Close()
 
-		processYaml(yamlFile, registerName)
+		itemLine, entryLine, err := processYaml(yamlFile, registerName)
+		if err != nil {
+			log.Fatal(err.Error())
+			return
+		}
+		fmt.Println(itemLine)
+		fmt.Println(entryLine)
 	}
 }
 
-func processYaml(yamlFile io.Reader, registerName string) {
+func processYaml(yamlFile io.Reader, registerName string) (string, string, error) {
 	var contentJson string
 	var err error
 	var key string
@@ -170,21 +180,18 @@ func processYaml(yamlFile io.Reader, registerName string) {
 		contentJson, err = toJsonStr(r)
 		key = r.Registry
 	default:
-		log.Fatal("Error: register name not recognised " + registerName)
-		return
+		return "","", errors.New("Error: register name not recognised " + registerName)
 	}
 	if err != nil {
-		log.Fatal("Error: failed to marshal to json for " + string(streamToBytes(yamlFile)))
-		return
+		return "","", errors.New("Error: failed to marshal to json for " + string(streamToBytes(yamlFile)))
 	}
 
 	contentJsonHash := "sha-256:" + sha256Hex([]byte(contentJson))
-	entryParts := []string{"append-entry", timestamp(), contentJsonHash, key}
+	entryParts := []string{"append-entry", key, timestamp(), contentJsonHash}
 	entryLine := strings.Join(entryParts, "\t")
 	itemParts := []string{"add-item", string(contentJson)}
 	itemLine := strings.Join(itemParts, "\t")
-	fmt.Println(itemLine)
-	fmt.Println(entryLine)
+	return itemLine, entryLine, nil
 }
 
 func main() {
