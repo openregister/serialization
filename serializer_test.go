@@ -23,9 +23,9 @@ func TestAlphabeticalSort(t *testing.T) {
 }
 
 func TestProcessLine(t *testing.T) {
-	fieldNames := []string{"a","b"}
-	fieldValues := []string{"a1","b1"}
-	sortedIndexes := []int{0,1}
+	fieldNames := []string{"a", "b"}
+	fieldValues := []string{"a1", "b1"}
+	sortedIndexes := []int{0, 1}
 	fields := map[string]Field{
 		"a": {"1", "string", "", "", "", ""},
 		"b": {"1", "string", "", "", "", ""},
@@ -201,12 +201,12 @@ func TestMarshalRegister(t *testing.T) {
 }
 
 func TestEscapedMarshalRegister(t *testing.T) {
-	 reg := Register{"", []string{"address"}, "alpha", "address", "office-for", "Post & address no > no < than that"}
-	 json, _ := toJsonStr(reg)
-	 expected := `{"fields":["address"],"phase":"alpha","register":"address","registry":"office-for","text":"Post & address no > no < than that"}`
-	 if expected != json {
-	 	t.Error(`should write json without escaping &, <, >`)
-	 }
+	reg := Register{"", []string{"address"}, "alpha", "address", "office-for", "Post & address no > no < than that"}
+	json, _ := toJsonStr(reg)
+	expected := `{"fields":["address"],"phase":"alpha","register":"address","registry":"office-for","text":"Post & address no > no < than that"}`
+	if expected != json {
+		t.Error(`should write json without escaping &, <, >`)
+	}
 }
 
 func TestCheckFieldNames(t *testing.T) {

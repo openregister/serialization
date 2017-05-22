@@ -74,7 +74,7 @@ func processLine(fieldValues []string, fieldNames []string, sortedIndexes []int,
 	key, err := getKey(fieldNames, fieldValues, registerName)
 	if err != nil {
 		log.Fatal("Error: getting key " + err.Error())
-		return "","", err
+		return "", "", err
 	}
 	contentJson := buildContentJson(fieldNames, fieldValues, sortedIndexes, fieldDefns)
 	contentJsonHash := "sha-256:" + sha256Hex([]byte(contentJson))
@@ -89,7 +89,7 @@ func processCSV(fieldsFile, tsvFile io.Reader, registerName string, includeRootH
 	var fields = map[string]Field{}
 	fields, err := readFieldTypes(fieldsFile)
 	if err != nil {
-		log.Fatal("Error: extracting fields: "+ err.Error())
+		log.Fatal("Error: extracting fields: " + err.Error())
 		return
 	}
 
@@ -180,10 +180,10 @@ func processYaml(yamlFile io.Reader, registerName string) (string, string, error
 		contentJson, err = toJsonStr(r)
 		key = r.Registry
 	default:
-		return "","", errors.New("Error: register name not recognised " + registerName)
+		return "", "", errors.New("Error: register name not recognised " + registerName)
 	}
 	if err != nil {
-		return "","", errors.New("Error: failed to marshal to json for " + string(streamToBytes(yamlFile)))
+		return "", "", errors.New("Error: failed to marshal to json for " + string(streamToBytes(yamlFile)))
 	}
 
 	contentJsonHash := "sha-256:" + sha256Hex([]byte(contentJson))
