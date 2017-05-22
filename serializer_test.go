@@ -31,10 +31,10 @@ func TestProcessLine(t *testing.T) {
 		"b": {"1", "string", "", "", "", ""},
 	}
 	registerName := "a"
-	_, entryLine, _ := processLine(fieldValues, fieldNames, sortedIndexes, fields, registerName) 
-	matched, _ := regexp.MatchString("append-entry\ta1\t.+\tsha-256:.+", entryLine)
-	if  !matched {
-		t.Error("entry line should be append-entry[tab]a1[tab]date[tab]sha-256:...")
+	_, entryLine, _ := processLine(fieldValues, fieldNames, sortedIndexes, fields, registerName)
+	matched, _ := regexp.MatchString("append-entry\tuser\ta1\t.+\tsha-256:.+", entryLine)
+	if !matched {
+		t.Error("entry line should be append-entry[tab]type[tab]a1[tab]date[tab]sha-256:...")
 	}
 }
 
@@ -47,10 +47,10 @@ func TestProcessYaml(t *testing.T) {
 	defer yamlFile.Close()
 	_, entryLine, _ := processYaml(yamlFile, "register")
 	fmt.Println(entryLine)
-	matched, _ := regexp.MatchString("append-entry\tcountry\t.+\tsha-256:.+", entryLine)
-	if  !matched {
-		t.Error("entry line should be append-entry[tab]country[tab]date[tab]sha-256:...")
-	} 
+	matched, _ := regexp.MatchString("append-entry\tuser\tcountry\t.+\tsha-256:.+", entryLine)
+	if !matched {
+		t.Error("entry line should be append-entry[tab]type[tab]country[tab]date[tab]sha-256:...")
+	}
 }
 
 func TestBuildJson(t *testing.T) {

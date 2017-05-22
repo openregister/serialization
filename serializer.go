@@ -78,7 +78,7 @@ func processLine(fieldValues []string, fieldNames []string, sortedIndexes []int,
 	}
 	contentJson := buildContentJson(fieldNames, fieldValues, sortedIndexes, fieldDefns)
 	contentJsonHash := "sha-256:" + sha256Hex([]byte(contentJson))
-	entryParts := []string{"append-entry", key, timestamp(), contentJsonHash}
+	entryParts := []string{"append-entry", "user", key, timestamp(), contentJsonHash}
 	entryLine := strings.Join(entryParts, "\t")
 	itemParts := []string{"add-item", string(contentJson)}
 	itemLine := strings.Join(itemParts, "\t")
@@ -187,7 +187,7 @@ func processYaml(yamlFile io.Reader, registerName string) (string, string, error
 	}
 
 	contentJsonHash := "sha-256:" + sha256Hex([]byte(contentJson))
-	entryParts := []string{"append-entry", key, timestamp(), contentJsonHash}
+	entryParts := []string{"append-entry", "user", key, timestamp(), contentJsonHash}
 	entryLine := strings.Join(entryParts, "\t")
 	itemParts := []string{"add-item", string(contentJson)}
 	itemLine := strings.Join(itemParts, "\t")
