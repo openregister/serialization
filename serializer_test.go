@@ -69,6 +69,23 @@ func TestBuildJson(t *testing.T) {
 	}
 }
 
+func TestBuildJsonCurie(t *testing.T) {
+	fieldNames := []string{"c", "b", "a"}
+	fieldValues := []string{"d:e;h:i", "j:k", "1"}
+	sortedIndexes := []int{2, 1, 0}
+	fields := map[string]Field{
+		"a": {"1", "string", "", "", "", ""},
+		"b": {"1", "curie", "", "", "", ""},
+		"c": {"n", "curie", "", "", "", ""},
+	}
+	json := buildContentJson(fieldNames, fieldValues, sortedIndexes, fields)
+	fmt.Println( json )
+	expected := `{"a":"1","b":"j:k","c":["d:e","h:i"]}`
+	if expected != json {
+		t.Error("should build " + expected)
+	}
+}
+
 func TestBuildJsonIgnoreWhitespace(t *testing.T) {
 	fieldNames := []string{"c", "b", "a"}
 	fieldValues := []string{"d", "  ", "1"}

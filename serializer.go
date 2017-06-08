@@ -22,10 +22,10 @@ func buildContentJson(fieldNames []string, fieldValues []string, sortedIndexes [
 			fieldDef := fields[fieldNames[index]]
 			escapedValue := escapeForJson(fieldValues[index])
 			if fieldDef.Cardinality == "n" {
-				if fieldDef.Datatype == "string" {
-					jsonPart = fmt.Sprintf(`"%s":%s`, fieldNames[index], toJsonArrayOfStr(escapedValue))
-				} else {
+				if fieldDef.Datatype == "integer" {
 					jsonPart = fmt.Sprintf(`"%s":%s`, fieldNames[index], toJsonArrayOfNum(escapedValue))
+				} else {
+					jsonPart = fmt.Sprintf(`"%s":%s`, fieldNames[index], toJsonArrayOfStr(escapedValue))
 				}
 			} else {
 				jsonPart = fmt.Sprintf(`"%s":"%s"`, fieldNames[index], escapedValue)
