@@ -174,11 +174,6 @@ func processYaml(yamlFile io.Reader, registerName string) (string, string, error
 		yaml.Unmarshal(streamToBytes(yamlFile), &r)
 		contentJson, err = toJsonStr(r)
 		key = r.Register
-	case "registry":
-		var r Registry
-		yaml.Unmarshal(streamToBytes(yamlFile), &r)
-		contentJson, err = toJsonStr(r)
-		key = r.Registry
 	default:
 		return "", "", errors.New("Error: register name not recognised " + registerName)
 	}

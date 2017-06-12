@@ -28,10 +28,6 @@ type Register struct {
 	Text      string   `json:"text,omitempty"`
 }
 
-type Registry struct {
-	Registry string `json:"registry,omitempty"`
-}
-
 // need to implement sort.Interface for FieldIndex
 type FieldIndex struct {
 	Field string
