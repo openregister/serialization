@@ -47,7 +47,7 @@ Tests are in **.../openregister/serializer_test.go**. To run
 
 You need to have a copy of the fields JSON in a file e.g.
 
-    >curl http://field.discovery.openregister.org/records.json > field-records.json
+    >curl https://field.discovery.openregister.org/records.json > field-records.json
 
 #### arguments
 
